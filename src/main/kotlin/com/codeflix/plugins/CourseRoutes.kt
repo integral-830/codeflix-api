@@ -50,7 +50,7 @@ fun Route.courseRoutes(db: DatabaseFactory) {
                 else
                     call.respond(HttpStatusCode.OK, SimpleResponse(false, "Course not found"))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Course could not be updated"))
+                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Course could not be updated."))
             }
         }
 
