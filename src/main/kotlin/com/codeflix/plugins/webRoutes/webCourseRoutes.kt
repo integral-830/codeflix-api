@@ -1,4 +1,4 @@
-package com.codeflix.plugins
+package com.codeflix.plugins.generalRoutes
 
 import com.codeflix.data.model.Course
 import com.codeflix.data.model.SimpleResponse
@@ -9,8 +9,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.courseRoutes(db: DatabaseFactory) {
-    route("/course") {
+fun Route.webCourseRoutes(db: DatabaseFactory) {
+    route("/web/course") {
         post {
             val course = try {
                 call.receive<Course>()
@@ -19,7 +19,7 @@ fun Route.courseRoutes(db: DatabaseFactory) {
                 return@post
             }
             try {
-                db.addCourse(course = course)
+                db.addWebCourse(course = course)
                 call.respond(HttpStatusCode.OK, SimpleResponse(true, "Course created successfully"))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Course could not be created"))
@@ -28,7 +28,7 @@ fun Route.courseRoutes(db: DatabaseFactory) {
 
         get {
             try {
-                val courses = db.getAllCourses()
+                val courses = db.getWebCourses()
                 call.respond(HttpStatusCode.OK, courses)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Course not found"))
@@ -44,7 +44,7 @@ fun Route.courseRoutes(db: DatabaseFactory) {
             }
 
             try {
-                val result = db.updateCourse(course = course)
+                val result = db.updateWebCourse(course = course)
                 if (result)
                 call.respond(HttpStatusCode.OK, SimpleResponse(true, "Course updated successfully"))
                 else
@@ -62,7 +62,7 @@ fun Route.courseRoutes(db: DatabaseFactory) {
                 return@delete
             }
             try {
-                val result = db.deleteCourse(courseId = id)
+                val result = db.deleteWebCourse(courseId = id)
                 if (result)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Course deleted successfully"))
                 else

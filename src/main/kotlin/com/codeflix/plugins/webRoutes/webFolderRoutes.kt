@@ -1,4 +1,4 @@
-package com.codeflix.plugins
+package com.codeflix.plugins.generalRoutes
 
 import com.codeflix.data.model.Folder
 import com.codeflix.data.model.SimpleResponse
@@ -9,9 +9,9 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.folderRoutes(db: DatabaseFactory) {
+fun Route.webFolderRoutes(db: DatabaseFactory) {
 
-    route("/folder") {
+    route("/web/folder") {
 
         post {
             val folder = try {
@@ -21,7 +21,7 @@ fun Route.folderRoutes(db: DatabaseFactory) {
                 return@post
             }
             try {
-                db.addFolder(folder = folder)
+                db.addWebFolder(folder = folder)
                 call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder created successfully"))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be created"))
@@ -36,7 +36,7 @@ fun Route.folderRoutes(db: DatabaseFactory) {
                 return@get
             }
             try {
-                val folders = db.getAllFolders(courseId = id)
+                val folders = db.getWebFolders(courseId = id)
                 call.respond(HttpStatusCode.OK, folders)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folders not found"))
@@ -52,7 +52,7 @@ fun Route.folderRoutes(db: DatabaseFactory) {
             }
 
             try {
-                val result = db.updateFolder(folder = folder)
+                val result = db.updateWebFolder(folder = folder)
                 if (result)
                 call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder updated successfully"))
                 else
@@ -70,7 +70,7 @@ fun Route.folderRoutes(db: DatabaseFactory) {
                 return@delete
             }
             try {
-                val result = db.deleteFolder(folderId = id)
+                val result = db.deleteWebFolder(folderId = id)
                 if (result)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder deleted successfully"))
                 else

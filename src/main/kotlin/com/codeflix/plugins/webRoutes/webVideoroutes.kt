@@ -1,4 +1,4 @@
-package com.codeflix.plugins
+package com.codeflix.plugins.webRoutes
 
 import com.codeflix.data.model.SimpleResponse
 import com.codeflix.data.model.Video
@@ -9,8 +9,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.videoRoutes(db: DatabaseFactory) {
-    route("/video") {
+fun Route.webVideoRoutes(db: DatabaseFactory) {
+    route("/web/video") {
 
         post {
             val video = try {
@@ -20,7 +20,7 @@ fun Route.videoRoutes(db: DatabaseFactory) {
                 return@post
             }
             try {
-                db.addVideo(video = video)
+                db.addWebVideo(video = video)
                 call.respond(HttpStatusCode.OK, SimpleResponse(true, "Video created successfully"))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Video could not be created"))
@@ -35,7 +35,7 @@ fun Route.videoRoutes(db: DatabaseFactory) {
                 return@get
             }
             try {
-                val videos = db.getAllVideos(folderId = id)
+                val videos = db.getWebVideos(folderId = id)
                 call.respond(HttpStatusCode.OK, videos)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Videos not found"))
@@ -50,7 +50,7 @@ fun Route.videoRoutes(db: DatabaseFactory) {
                 return@patch
             }
             try {
-                val result = db.updateVideo(video = video)
+                val result = db.updateWebVideo(video = video)
                 if (result)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Video updated successfully"))
                 else
@@ -68,7 +68,7 @@ fun Route.videoRoutes(db: DatabaseFactory) {
                 return@delete
             }
             try {
-                val result = db.deleteVideo(videoId = id)
+                val result = db.deleteWebVideo(videoId = id)
                 if (result)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Video deleted successfully"))
                 else

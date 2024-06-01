@@ -6,7 +6,9 @@ import kotlinx.serialization.Serializable
 data class CourseResponse (
     val success:Boolean,
     val courses : List<Course> = emptyList()
-)@Serializable
+)
+
+@Serializable
 data class FolderResponse (
     val success:Boolean,
     val folders : List<Folder> = emptyList()
