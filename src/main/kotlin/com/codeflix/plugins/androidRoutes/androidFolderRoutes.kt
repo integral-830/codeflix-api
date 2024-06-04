@@ -13,20 +13,20 @@ fun Route.androidFolderRoutes(db: DatabaseFactory) {
 
     route("/android/folder") {
 
-        post {
-            val folder = try {
-                call.receive<Folder>()
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, e.message ?: "Missing Fields"))
-                return@post
-            }
-            try {
-                db.addAndroidFolder(folder = folder)
-                call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder created successfully"))
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be created"))
-            }
-        }
+//        post {
+//            val folder = try {
+//                call.receive<Folder>()
+//            } catch (e: Exception) {
+//                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, e.message ?: "Missing Fields"))
+//                return@post
+//            }
+//            try {
+//                db.addAndroidFolder(folder = folder)
+//                call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder created successfully"))
+//            } catch (e: Exception) {
+//                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be created"))
+//            }
+//        }
 
         get {
             val id = try {
@@ -73,43 +73,43 @@ fun Route.androidFolderRoutes(db: DatabaseFactory) {
             }
         }
 
-        patch {
-            val folder = try {
-                call.receive<Folder>()
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, "Missing Fields"))
-                return@patch
-            }
-            try {
-                val result = db.updateAndroidFolder(folder = folder)
-                if (result)
-                    call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder updated successfully"))
-                else
-                    call.respond(HttpStatusCode.OK, SimpleResponse(false, "Folder not found"))
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be updated"))
-            }
-        }
-
-        delete {
-            val id = try {
-                call.request.queryParameters["id"]!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, e.message ?: "Folder id not found "))
-                return@delete
-            }
-            try {
-                val result = db.deleteAndroidFolder(folderId = id)
-                if (result)
-                    call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder deleted successfully"))
-                else
-                    call.respond(HttpStatusCode.Conflict, SimpleResponse(false, "Folder not found"))
-
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be deleted"))
-            }
-
-        }
+//        patch {
+//            val folder = try {
+//                call.receive<Folder>()
+//            } catch (e: Exception) {
+//                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, "Missing Fields"))
+//                return@patch
+//            }
+//            try {
+//                val result = db.updateAndroidFolder(folder = folder)
+//                if (result)
+//                    call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder updated successfully"))
+//                else
+//                    call.respond(HttpStatusCode.OK, SimpleResponse(false, "Folder not found"))
+//            } catch (e: Exception) {
+//                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be updated"))
+//            }
+//        }
+//
+//        delete {
+//            val id = try {
+//                call.request.queryParameters["id"]!!
+//            } catch (e: Exception) {
+//                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, e.message ?: "Folder id not found "))
+//                return@delete
+//            }
+//            try {
+//                val result = db.deleteAndroidFolder(folderId = id)
+//                if (result)
+//                    call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder deleted successfully"))
+//                else
+//                    call.respond(HttpStatusCode.Conflict, SimpleResponse(false, "Folder not found"))
+//
+//            } catch (e: Exception) {
+//                call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folder could not be deleted"))
+//            }
+//
+//        }
 
     }
 
