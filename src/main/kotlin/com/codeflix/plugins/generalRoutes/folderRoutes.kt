@@ -29,6 +29,36 @@ fun Route.folderRoutes(db: DatabaseFactory) {
         }
 
         get {
+            val page = try {
+                call.request.queryParameters["page"]!!
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, e.message ?: "Page is missing"))
+                return@get
+            }
+            val limit = try {
+                call.request.queryParameters["limit"]!!
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, SimpleResponse(false, e.message ?: "Limit is missing"))
+                return@get
+            }
+            val pageInt = try {
+                page.toInt()
+            } catch (e: Exception) {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    SimpleResponse(false, "Page value is not accepted")
+                )
+                return@get
+            }
+            val limitInt = try {
+                limit.toInt()
+            } catch (e: Exception) {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    SimpleResponse(false, "Limit value is not accepted")
+                )
+                return@get
+            }
             val id = try {
                 call.request.queryParameters["id"]!!
             } catch (e: Exception) {
@@ -36,7 +66,7 @@ fun Route.folderRoutes(db: DatabaseFactory) {
                 return@get
             }
             try {
-                val folders = db.getGeneralFolders(courseId = id)
+                val folders = db.getGeneralFolders(courseId = id, page = pageInt, limit = limitInt)
                 call.respond(HttpStatusCode.OK, folders)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folders not found"))
@@ -54,7 +84,7 @@ fun Route.folderRoutes(db: DatabaseFactory) {
             try {
                 val result = db.updateGeneralFolder(folder = folder)
                 if (result)
-                call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder updated successfully"))
+                    call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder updated successfully"))
                 else
                     call.respond(HttpStatusCode.OK, SimpleResponse(false, "Folder not found"))
             } catch (e: Exception) {

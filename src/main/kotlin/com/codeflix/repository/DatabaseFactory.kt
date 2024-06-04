@@ -9,12 +9,12 @@ import org.litote.kmongo.reactivestreams.KMongo
 
 class DatabaseFactory {
     private val client = KMongo
-//        .createClient(ConnectionString(System.getenv("MONGODB_STRING")))
-        .createClient(ConnectionString("mongodb+srv://integral:atlasverma0830@codeflix.isxvimj.mongodb.net/"))
+        .createClient(ConnectionString(System.getenv("MONGODB_STRING")))
+//        .createClient(ConnectionString("mongodb+srv://integral:atlasverma0830@codeflix.isxvimj.mongodb.net/"))
         .coroutine
 
-//    private val database = client.getDatabase(System.getenv("DATABASE_NAME"))
-    private val database = client.getDatabase("codeflix_db")
+        private val database = client.getDatabase(System.getenv("DATABASE_NAME"))
+//    private val database = client.getDatabase("codeflix_db")
     private val courseCollection: CoroutineCollection<Course> = database.getCollection<Course>("courses")
     private val folderCollection: CoroutineCollection<Folder> = database.getCollection<Folder>("folders")
     private val videoCollection: CoroutineCollection<Video> = database.getCollection<Video>("videos")
@@ -63,74 +63,102 @@ class DatabaseFactory {
         webVideoCollection.insertOne(video)
     }
 
-    suspend fun getGeneralCourses(): CourseResponse =
+    suspend fun getGeneralCourses(page: Int, limit: Int): CourseResponse =
         CourseResponse(
             success = true,
             courses = courseCollection
                 .find()
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getWebCourses(): CourseResponse =
+    suspend fun getWebCourses(page: Int, limit: Int): CourseResponse =
         CourseResponse(
             success = true,
             courses = webCourseCollection
                 .find()
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
-    suspend fun getAndroidCourses(): CourseResponse =
+
+    suspend fun getAndroidCourses(page: Int, limit: Int): CourseResponse =
         CourseResponse(
             success = true,
             courses = androidCourseCollection
                 .find()
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getGeneralFolders(courseId: String): FolderResponse =
+    suspend fun getGeneralFolders(courseId: String, page: Int, limit: Int): FolderResponse =
         FolderResponse(
             success = true,
             folders = folderCollection
                 .find(Folder::courseId eq courseId)
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getWebFolders(courseId: String): FolderResponse =
+    suspend fun getWebFolders(courseId: String, page: Int, limit: Int): FolderResponse =
         FolderResponse(
             success = true,
             folders = webFolderCollection
                 .find(Folder::courseId eq courseId)
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getAndroidFolders(courseId: String): FolderResponse =
+    suspend fun getAndroidFolders(courseId: String, page: Int, limit: Int): FolderResponse =
         FolderResponse(
             success = true,
             folders = androidFolderCollection
                 .find(Folder::courseId eq courseId)
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getGeneralVideos(folderId: String): VideoResponse =
+    suspend fun getGeneralVideos(folderId: String, page: Int, limit: Int): VideoResponse =
         VideoResponse(
             success = true,
             videos = videoCollection
                 .find(Video::folderId eq folderId)
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getWebVideos(folderId: String): VideoResponse =
+    suspend fun getWebVideos(folderId: String, page: Int, limit: Int): VideoResponse =
         VideoResponse(
             success = true,
             videos = webVideoCollection
                 .find(Video::folderId eq folderId)
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
-    suspend fun getAndroidVideos(folderId: String): VideoResponse =
+    suspend fun getAndroidVideos(folderId: String, page: Int, limit: Int): VideoResponse =
         VideoResponse(
             success = true,
             videos = androidVideoCollection
                 .find(Video::folderId eq folderId)
+                .skip(skip = (page - 1) * limit)
+                .limit(limit = limit)
+                .partial(true)
                 .toList()
         )
 
@@ -255,7 +283,9 @@ class DatabaseFactory {
         } else {
             return false
         }
-    }suspend fun deleteWebCourse(courseId: String): Boolean {
+    }
+
+    suspend fun deleteWebCourse(courseId: String): Boolean {
         val list = webCourseCollection
             .find(Course::id eq courseId)
             .toList()
@@ -289,7 +319,9 @@ class DatabaseFactory {
         } else {
             return false
         }
-    }suspend fun deleteWebFolder(folderId: String): Boolean {
+    }
+
+    suspend fun deleteWebFolder(folderId: String): Boolean {
         val list = webFolderCollection
             .find(Folder::folderId eq folderId)
             .toList()
@@ -323,7 +355,9 @@ class DatabaseFactory {
         } else {
             return false
         }
-    }suspend fun deleteWebVideo(videoId: String): Boolean {
+    }
+
+    suspend fun deleteWebVideo(videoId: String): Boolean {
         val list = webVideoCollection
             .find(Video::videoId eq videoId)
             .toList()
