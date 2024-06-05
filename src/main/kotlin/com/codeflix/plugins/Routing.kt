@@ -10,9 +10,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureRouting(db: DatabaseFactory) {
-
-    val passKey = System.getenv("PASS_KEY")
+fun Application.configureRouting(db: DatabaseFactory, passKey: String) {
 
     routing {
         get("/") {
