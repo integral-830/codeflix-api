@@ -12,21 +12,23 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting(db: DatabaseFactory) {
 
+    val passKey = System.getenv("PASS_KEY")
+
     routing {
         get("/") {
             call.respondText("Hello World!")
         }
-        courseRoutes(db = db)
-        folderRoutes(db = db)
-        videoRoutes(db = db)
+        courseRoutes(db = db, key = passKey)
+        folderRoutes(db = db, key = passKey)
+        videoRoutes(db = db, key = passKey)
 
-        androidCourseRoutes(db = db)
-        androidFolderRoutes(db= db)
-        androidVideoRoutes(db = db)
+        androidCourseRoutes(db = db, key = passKey)
+        androidFolderRoutes(db= db, key = passKey)
+        androidVideoRoutes(db = db, key = passKey)
 
-        webCourseRoutes(db = db)
-        webFolderRoutes(db = db)
-        webVideoRoutes(db = db)
+        webCourseRoutes(db = db, key = passKey)
+        webFolderRoutes(db = db, key = passKey)
+        webVideoRoutes(db = db, key = passKey)
     }
 
 }
