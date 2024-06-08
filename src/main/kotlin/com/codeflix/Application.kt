@@ -11,7 +11,6 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     val db = DatabaseFactory()
-    val passKey = System.getenv("PASS_KEY")
     configureSerialization()
-    configureRouting(db = db, passKey = passKey)
+    configureRouting(db = db)
 }
