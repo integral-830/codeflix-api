@@ -16,7 +16,7 @@ fun Application.configureRouting(db: DatabaseFactory) {
 
     routing {
         get("/") {
-            call.respondText("Hello World!")
+            call.respondText("CodeFlix Api is Running!")
         }
         courseRoutes(db = db, key = passKey)
         folderRoutes(db = db, key = passKey)
