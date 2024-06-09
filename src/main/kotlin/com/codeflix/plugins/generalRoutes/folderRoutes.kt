@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.folderRoutes(db: DatabaseFactory, key: String) {
 
-    route("/general/folder") {
+    route("/folder") {
 
         post {
             val folder = try {
@@ -23,7 +23,7 @@ fun Route.folderRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    db.addGeneralFolder(folder = folder)
+                    db.addFolder(folder = folder)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder created successfully"))
                 } catch (e: Exception) {
                     call.respond(
@@ -74,7 +74,7 @@ fun Route.folderRoutes(db: DatabaseFactory, key: String) {
                 return@get
             }
             try {
-                val folders = db.getGeneralFolders(courseId = id, page = pageInt, limit = limitInt)
+                val folders = db.getFolders(courseId = id, page = pageInt, limit = limitInt)
                 call.respond(HttpStatusCode.OK, folders)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Folders not found"))
@@ -91,7 +91,7 @@ fun Route.folderRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    val result = db.updateGeneralFolder(folder = folder)
+                    val result = db.updateFolder(folder = folder)
                     if (result)
                         call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder updated successfully"))
                     else
@@ -117,7 +117,7 @@ fun Route.folderRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    val result = db.deleteGeneralFolder(folderId = id)
+                    val result = db.deleteFolder(folderId = id)
                     if (result)
                         call.respond(HttpStatusCode.OK, SimpleResponse(true, "Folder deleted successfully"))
                     else

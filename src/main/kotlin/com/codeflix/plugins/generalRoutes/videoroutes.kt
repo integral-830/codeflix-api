@@ -10,7 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.videoRoutes(db: DatabaseFactory, key: String) {
-    route("/general/video") {
+    route("/video") {
 
         post {
             val video = try {
@@ -22,7 +22,7 @@ fun Route.videoRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    db.addGeneralVideo(video = video)
+                    db.addVideo(video = video)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Video created successfully"))
                 } catch (e: Exception) {
                     call.respond(
@@ -73,7 +73,7 @@ fun Route.videoRoutes(db: DatabaseFactory, key: String) {
                 return@get
             }
             try {
-                val videos = db.getGeneralVideos(folderId = id, page = pageInt, limit = limitInt)
+                val videos = db.getVideos(folderId = id, page = pageInt, limit = limitInt)
                 call.respond(HttpStatusCode.OK, videos)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Videos not found"))
@@ -90,7 +90,7 @@ fun Route.videoRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    val result = db.updateGeneralVideo(video = video)
+                    val result = db.updateVideo(video = video)
                     if (result)
                         call.respond(HttpStatusCode.OK, SimpleResponse(true, "Video updated successfully"))
                     else
@@ -116,7 +116,7 @@ fun Route.videoRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    val result = db.deleteGeneralVideo(videoId = id)
+                    val result = db.deleteVideo(videoId = id)
                     if (result)
                         call.respond(HttpStatusCode.OK, SimpleResponse(true, "Video deleted successfully"))
                     else

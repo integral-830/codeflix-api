@@ -10,7 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.courseRoutes(db: DatabaseFactory, key: String) {
-    route("/general/course") {
+    route("/course") {
         post {
             val course = try {
                 call.receive<Course>()
@@ -21,7 +21,7 @@ fun Route.courseRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    db.addGeneralCourse(course = course)
+                    db.addCourse(course = course)
                     call.respond(HttpStatusCode.OK, SimpleResponse(true, "Course created successfully"))
                 } catch (e: Exception) {
                     call.respond(
@@ -66,7 +66,7 @@ fun Route.courseRoutes(db: DatabaseFactory, key: String) {
                 return@get
             }
             try {
-                val courses = db.getGeneralCourses(page = pageInt, limit = limitInt)
+                val courses = db.getCourses(page = pageInt, limit = limitInt)
                 call.respond(HttpStatusCode.OK, courses)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, SimpleResponse(false, e.message ?: "Course not found"))
@@ -83,7 +83,7 @@ fun Route.courseRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    val result = db.updateGeneralCourse(course = course)
+                    val result = db.updateCourse(course = course)
                     if (result)
                         call.respond(HttpStatusCode.OK, SimpleResponse(true, "Course updated successfully"))
                     else
@@ -109,7 +109,7 @@ fun Route.courseRoutes(db: DatabaseFactory, key: String) {
             val passKey = call.request.header("Pass_Key")
             if (passKey == key) {
                 try {
-                    val result = db.deleteGeneralCourse(courseId = id)
+                    val result = db.deleteCourse(courseId = id)
                     if (result)
                         call.respond(HttpStatusCode.OK, SimpleResponse(true, "Course deleted successfully"))
                     else
