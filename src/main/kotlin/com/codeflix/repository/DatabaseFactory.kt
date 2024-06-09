@@ -45,11 +45,10 @@ class DatabaseFactory {
         )
 
     suspend fun getCourses(query: String, page: Int, limit: Int): CourseResponse {
-        val caseSensitiveTypeSafeFilter = Course::courseName regex query
         return CourseResponse(
             success = true,
             courses = courseCollection
-                .find(caseSensitiveTypeSafeFilter)
+                .find((Course::courseName).regex(query, "i"))
                 .skip(skip = (page - 1) * limit)
                 .limit(limit = limit)
                 .partial(true)
