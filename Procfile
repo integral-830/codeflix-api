@@ -1,0 +1,1 @@
+web: ./build/install/com.codeflix/bin/com.codeflix

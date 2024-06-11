@@ -11,11 +11,9 @@ import org.litote.kmongo.regex
 class DatabaseFactory {
     private val client = KMongo
         .createClient(ConnectionString(System.getenv("MONGODB_STRING")))
-//        .createClient(ConnectionString("mongodb+srv://integral:atlasverma0830@codeflix.isxvimj.mongodb.net/"))
         .coroutine
 
     private val database = client.getDatabase(System.getenv("DATABASE_NAME"))
-    //    private val database = client.getDatabase("codeflix_db")
 
     private val courseCollection: CoroutineCollection<Course> = database.getCollection<Course>("courses")
     private val folderCollection: CoroutineCollection<Folder> = database.getCollection<Folder>("folders")
